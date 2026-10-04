@@ -1,2 +1,7 @@
-# dnn-slides-staging
-Deep Neural Networks (MIM UW) lecture slides — staging preview
+# Deep Neural Networks (MIM UW) — lecture slides, staging
+
+Preview of the lecture slides before they are published on the official course site.
+View: https://marekcygan.github.io/dnn-slides-staging/
+
+Generated from a private repository by `publish-staging.sh`; do not edit here.
+Libraries in `vendor/` keep their own licences; image credits are in `assets/CREDITS.md`.
