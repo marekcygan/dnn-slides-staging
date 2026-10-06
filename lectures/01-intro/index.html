@@ -35,14 +35,50 @@
 <section class="title-slide">
   <h1>Lecture 1<br>Neural networks: flexible functions,<br>gradient descent,<br>and the generalization question</h1>
   <p class="subtitle">Deep Neural Networks · University of Warsaw · 2026/27</p>
+  <p class="small interactive-only" style="margin-top:1.5em"><a href="../../pdf/01-intro.pdf">PDF version</a> (light, for printing)</p>
 </section>
 
 <section>
   <h2>Course logistics</h2>
-  <ul>
-    <li>Course website · lab materials · communication — <span class="dim">(to be filled in)</span></li>
-    <li>Grading — <span class="dim">(to be filled in)</span></li>
-  </ul>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr; font-size:0.7em; gap:1em">
+    <div>
+      <div class="box">
+        <h3>Announcements: Slack</h3>
+        <div style="display:flex; gap:1em; align-items:center">
+          <img src="../../assets/slack-qr.svg" alt="QR code: invitation to the course Slack workspace" style="width:250px; height:250px; padding:10px; background:#fff; border-radius:6px; margin:0; flex:none">
+          <div style="line-height:1.4">All announcements are on Slack: scan the code to join the workspace, then join <b style="white-space:nowrap">#dnn-general</b>.
+            <div class="small" style="margin-top:0.4em"><a href="https://join.slack.com/t/machinelearni-cyi1366/shared_invite/zt-4bfetiimd-_c5V85nhi5TKr7sQVEOxOg">invitation link</a></div></div>
+        </div>
+      </div>
+      <div class="box" style="margin-top:0.6em">
+        <h3>Materials</h3>
+        <a href="https://mim-ml-teaching.github.io/public-dnn/">mim-ml-teaching.github.io/public-dnn</a>
+      </div>
+      <div class="box" style="margin-top:0.6em">
+        <h3>Grading</h3>
+        The grading rules will be announced in a week.
+      </div>
+    </div>
+    <div>
+      <div class="box">
+        <h3>Entry quiz (NumPy and other prerequisites)</h3>
+        <ul style="margin:0 0 0 1em">
+          <li>the questions are <b>public</b> (on the materials page): use them to check yourself</li>
+          <li>quiz at the <b>5th labs</b> (Oct 30 to Nov 6): a random subset of the same questions, no notes</li>
+          <li>10 questions, <b>10 points</b> out of about 100 to 120 in the course (roughly half a grade)</li>
+        </ul>
+      </div>
+      <div class="box" style="margin-top:0.6em">
+        <h3>ML Bootcamp (optional)</h3>
+        <ul style="margin:0 0 0 1em">
+          <li><b>Mon &amp; Wed, 18:15</b>, rooms 3043/3044, first four weeks; come to any subset</li>
+          <li>refresh the prerequisites: NumPy, Pandas, gradients, linear regression</li>
+          <li>or just come with questions, e.g. about previous labs</li>
+        </ul>
+        <p class="small" style="margin:0.4em 0 0">In USOS the bootcamp appears as groups 10 and 11; they are unrelated to the Tuesday 12:15 and 14:15 lab groups.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section>
@@ -51,7 +87,7 @@
     <ul style="margin:0 0 0 1em">
       <li>a neural network is a <b>highly customizable function</b></li>
       <li>with a <b>huge number of parameters</b></li>
-      <li><b>stochastic gradient descent</b> sets them</li>
+      <li><b>gradient descent</b> iteratively adjusts these parameters to reduce the training loss</li>
       <li>the result <b>generalizes</b> far better than it has any right to</li>
     </ul>
   </div>
@@ -75,7 +111,7 @@
   <div class="bbox-item"><div class="prob">Speech recognition <span>— turn audio into text</span></div><div class="bbox"><div class="in"><span>a recording of speech</span><svg viewBox="0 0 96 64" width="96" height="64" style="flex:none"><rect x="2" y="2" width="92" height="60" rx="4" fill="#1e2128" stroke="#3a3f4b"/><line x1="8" x2="8" y1="30" y2="34" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="12" x2="12" y1="28" y2="36" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="16" x2="16" y1="24" y2="40" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="20" x2="20" y1="18" y2="46" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="24" x2="24" y1="12" y2="52" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="28" x2="28" y1="20" y2="44" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="32" x2="32" y1="26" y2="38" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="36" x2="36" y1="29" y2="35" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="40" x2="40" y1="23" y2="41" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="44" x2="44" y1="14" y2="50" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="48" x2="48" y1="8" y2="56" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="52" x2="52" y1="16" y2="48" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="56" x2="56" y1="24" y2="40" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="60" x2="60" y1="28" y2="36" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="64" x2="64" y1="30" y2="34" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="68" x2="68" y1="26" y2="38" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="72" x2="72" y1="20" y2="44" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="76" x2="76" y1="14" y2="50" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="80" x2="80" y1="22" y2="42" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="84" x2="84" y1="27" y2="37" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/><line x1="88" x2="88" y1="30" y2="34" stroke="#5ab0ff" stroke-width="2.4" stroke-linecap="round"/></svg></div><div class="arr"></div><div class="box">$f$ = ?</div><div class="arr"></div><div class="out"><svg viewBox="0 0 96 64" width="96" height="64" style="flex:none"><rect x="2" y="6" width="92" height="52" rx="4" fill="#e7e9ee"/><rect x="10" y="14" width="70" height="4" rx="2" fill="#5a606c"/><rect x="10" y="24" width="60" height="4" rx="2" fill="#5a606c"/><rect x="10" y="34" width="74" height="4" rx="2" fill="#5a606c"/><rect x="10" y="44" width="40" height="4" rx="2" fill="#5a606c"/></svg><span>the transcript</span></div></div></div>
   <div class="bbox-item"><div class="prob">Language modelling / chat <span>— continue or answer a text prompt</span></div><div class="bbox"><div class="in"><span>a question</span><svg viewBox="0 0 96 64" width="96" height="64" style="flex:none"><rect x="2" y="6" width="92" height="44" rx="10" fill="#272b34" stroke="#5ab0ff"/><path d="M14 50 L10 60 L24 50 Z" fill="#272b34" stroke="#5ab0ff"/><text x="48" y="25" font-family="Inter, Arial" font-size="10" fill="#e7e9ee" text-anchor="middle">Explain double</text><text x="48" y="38" font-family="Inter, Arial" font-size="10" fill="#e7e9ee" text-anchor="middle">descent to me</text></svg></div><div class="arr"></div><div class="box">$f$ = ?</div><div class="arr"></div><div class="out"><svg viewBox="0 0 96 64" width="96" height="64" style="flex:none"><rect x="2" y="4" width="92" height="46" rx="10" fill="#272b34" stroke="#f2b134"/><path d="M80 50 L86 60 L72 50 Z" fill="#272b34" stroke="#f2b134"/><rect x="12" y="13" width="68" height="4" rx="2" fill="#9aa1ae"/><rect x="12" y="22" width="56" height="4" rx="2" fill="#9aa1ae"/><rect x="12" y="31" width="72" height="4" rx="2" fill="#9aa1ae"/><rect x="12" y="40" width="34" height="4" rx="2" fill="#9aa1ae"/></svg><span>an answer</span></div></div></div>
   <div class="bbox-item"><div class="prob">Robot manipulation <span>— map what the robot sees to how it moves</span></div><div class="bbox"><div class="in"><span>camera image of a table</span><svg viewBox="0 0 96 64" width="96" height="64" style="flex:none"><rect x="2" y="2" width="92" height="60" rx="4" fill="#5a4630"/><rect x="2" y="2" width="92" height="60" rx="4" fill="none" stroke="#3a3f4b"/><ellipse cx="58" cy="34" rx="12" ry="12" fill="#e7e9ee"/><ellipse cx="58" cy="34" rx="8" ry="8" fill="#6b4226"/><rect x="69" y="31" width="8" height="5" rx="2" fill="#e7e9ee"/><rect x="16" y="16" width="20" height="14" rx="2" fill="#5fd38d" opacity="0.8"/><text x="6" y="58" font-family="Inter, Arial" font-size="8" fill="#e7e9ee">top camera</text></svg></div><div class="arr"></div><div class="box">$f$ = ?</div><div class="arr"></div><div class="out"><svg viewBox="0 0 96 64" width="96" height="64" style="flex:none"><rect x="2" y="54" width="92" height="8" fill="#5a4630"/><rect x="10" y="46" width="16" height="8" fill="#5a606c"/><line x1="18" y1="46" x2="34" y2="16" stroke="#c9ccd4" stroke-width="5" stroke-linecap="round"/><line x1="34" y1="16" x2="64" y2="24" stroke="#c9ccd4" stroke-width="5" stroke-linecap="round"/><circle cx="18" cy="46" r="3.5" fill="#b28dff"/><circle cx="34" cy="16" r="3.5" fill="#b28dff"/><circle cx="64" cy="24" r="3.5" fill="#b28dff"/><line x1="64" y1="24" x2="66" y2="40" stroke="#c9ccd4" stroke-width="3"/><line x1="72" y1="24" x2="74" y2="40" stroke="#c9ccd4" stroke-width="3"/><line x1="64" y1="24" x2="72" y2="24" stroke="#c9ccd4" stroke-width="3"/><rect x="64" y="40" width="12" height="14" rx="2" fill="#e7e9ee"/><path d="M40 40 Q52 52 62 46" stroke="#f2b134" stroke-width="1.5" fill="none" stroke-dasharray="3 2"/></svg><span>motor commands that grasp the cup</span></div></div></div>
-  <div class="question fragment" style="margin-top:0.6em">Could you write any of these programs by hand?</div>
+  <div class="question" style="margin-top:0.6em">Could you write any of these programs by hand?</div>
 </section>
 
 <section>
@@ -87,26 +123,23 @@
         <li>we cannot write $f$ down…</li>
         <li>…but we can collect <b>examples</b> $(x_i, y_i)$</li>
       </ul>
-      <div class="takeaway fragment" style="margin-top:0.8em">
-        <b>The deep learning recipe</b><br>
-        1. choose a huge, flexible family $\{f_\theta\}$<br>
-        2. let the data choose the parameters $\theta$
+      <div class="takeaway" style="margin-top:0.8em">
+        <b>The deep learning recipe</b>
+        <ol style="margin:0.2em 0 0 1.2em; font-size:0.85em; line-height:1.3">
+          <li style="margin-bottom:0.3em">Choose a neural-network architecture that composes multiple learned layers with nonlinear activations.</li>
+          <li>Fit its parameters to data by minimizing a training loss, typically using gradient-based optimization.</li>
+        </ol>
       </div>
     </div>
-    <div class="fragment">
+    <div>
       <div class="box">
         <h3>Not a new idea</h3>
-        <p class="small" style="font-size:0.72em">Linear regression is the same recipe with a <em>tiny</em> family: $f_\theta(x) = \theta^\top x$.</p>
+        <p class="small" style="font-size:0.72em">Linear regression is the same recipe with a <em>tiny</em> family:
+          $$\begin{aligned}\hat{y} = f_\theta(\mathbf{x}) &= \theta_0 + \sum_{j=1}^{d} \theta_j x_j \\ &= \theta_0 + \theta_1 x_1 + \cdots + \theta_d x_d.\end{aligned}$$</p>
         <p class="small" style="font-size:0.72em">What changed: the family is enormous, and we still manage to find good $\theta$.</p>
       </div>
     </div>
   </div>
-</section>
-
-<section>
-  <h2>How many knobs?</h2>
-  <div data-widget="paramscale" data-config='{"width":1040}'></div>
-  <p class="small" style="margin-top:0.2em">Each parameter is one real number the training procedure has to set. The largest models are <b>mixtures of experts</b>: only a fraction of the parameters is used for each token. Frontier closed models (GPT, Claude, Gemini) do not publish their sizes.</p>
 </section>
 
 <!-- ============================================================ -->
@@ -733,7 +766,7 @@
 <section>
   <h2>What one perceptron can — and cannot — do</h2>
   <div data-widget="perceptron2d" data-config='{"mode":"single","target":"AND","width":460,"height":400}'></div>
-  <p class="small fragment" style="margin-top:0.3em">One perceptron draws <b>one line</b>: XOR is impossible (Minsky &amp; Papert, <em>Perceptrons</em>, 1969). Two layers solve it — next slide: in fact, any Boolean function.</p>
+  <p class="small" style="margin-top:0.3em">One perceptron draws <b>one line</b>: XOR is impossible (Minsky &amp; Papert, <em>Perceptrons</em>, 1969). Two layers solve it — next slide: in fact, any Boolean function.</p>
 </section>
 
 <section>
@@ -752,9 +785,9 @@
     <div style="font-size:0.86em">
       <p>Two layers of perceptrons can compute any Boolean function (previous slide). But how do we <b>train</b> the hidden layer?</p>
       <p class="small" style="margin-top:0">The Mark I left its hidden layer random: nobody knew how to train it.</p>
-      <p class="fragment">Nudge any weight slightly: the step output does not change at all. Every partial derivative is <b>0</b> — gradient descent has nothing to follow.</p>
-      <p class="fragment">Fix (1980s, backpropagation): replace the step by a <b>smooth</b> or piecewise-linear activation. Same weighted sum, same layers — now trainable by gradient descent.</p>
-      <p class="fragment small">The name stayed: a <b>multi-layer perceptron (MLP)</b> today means layers of such neurons — not of 1957 perceptrons.</p>
+      <p>Nudge any weight slightly: the step output does not change at all. Every partial derivative is <b>0</b> — gradient descent has nothing to follow.</p>
+      <p>Fix (1980s, backpropagation): replace the step by a <b>smooth</b> or piecewise-linear activation. Same weighted sum, same layers — now trainable by gradient descent.</p>
+      <p class="small">The name stayed: a <b>multi-layer perceptron (MLP)</b> today means layers of such neurons — not of 1957 perceptrons.</p>
     </div>
     <div style="display:flex; flex-direction:column; gap:0.5em; align-items:center">
       <figure style="margin:0; text-align:center"><svg viewBox="0 0 230 150" width="230" height="150" style="background:#1e2128; border:1px solid #3a3f4b; border-radius:8px">
@@ -824,6 +857,10 @@
 <circle cx="567" cy="150" r="5" fill="#e7e9ee"/>
 <text x="567" y="80" fill="#e7e9ee" font-size="16" font-weight="600" text-anchor="middle">1998 · LeNet</text>
 <text x="567" y="98" fill="#9aa1ae" font-size="13" text-anchor="middle">convnets read cheques</text>
+<line x1="558" y1="150" x2="558" y2="242" stroke="#e7e9ee" stroke-width="1.5"/>
+<circle cx="558" cy="150" r="5" fill="#e7e9ee"/>
+<text x="558" y="264" fill="#e7e9ee" font-size="16" font-weight="600" text-anchor="middle">1997 · LSTM</text>
+<text x="558" y="282" fill="#9aa1ae" font-size="13" text-anchor="middle">Hochreiter &amp; Schmidhuber: memory for sequences</text>
 <line x1="774" y1="150" x2="774" y2="190" stroke="#e7e9ee" stroke-width="1.5"/>
 <circle cx="774" cy="150" r="5" fill="#e7e9ee"/>
 <text x="774" y="212" fill="#e7e9ee" font-size="16" font-weight="600" text-anchor="middle">2009 · ImageNet</text>
@@ -844,7 +881,7 @@
 <circle cx="1130" cy="150" r="5" fill="#f2b134"/>
 <text x="1130" y="264" fill="#f2b134" font-size="16" font-weight="600" text-anchor="end">2026 · Trillion-parameter</text>
 <text x="1130" y="282" fill="#9aa1ae" font-size="13" text-anchor="end">open-weight models</text>
-<text x="585" y="190" fill="#6b7280" font-size="11" text-anchor="middle">(axis stretched after 2000)</text>
+<text x="680" y="194" fill="#6b7280" font-size="11" text-anchor="middle">(axis stretched after 2000)</text>
 </svg>
   <div class="cols c-3" style="font-size:0.66em; gap:0.7em; margin-top:0.2em">
     <div class="box"><h3>Data</h3>MNIST (1998): 60,000 images → ImageNet (2009): 1.2 million → today's language models: ~15 trillion tokens of text.</div>
@@ -854,24 +891,42 @@
 </section>
 
 <section>
+  <h2>Neuron, layer, network</h2>
+  <div class="cols c-3" style="font-size:0.8em; gap:0.7em">
+    <div class="box"><h3>neuron</h3><span class="dim">weighted sum + nonlinearity</span>
+      <svg viewBox="0 0 300 180" style="width:100%; max-height:250px; display:block; margin:0.5em auto 0.3em"><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f2b134"/></marker></defs><line x1="61" y1="55" x2="150" y2="90" stroke="#5f6673" stroke-width="1.5"/><line x1="61" y1="125" x2="150" y2="90" stroke="#5f6673" stroke-width="1.5"/><text x="95" y="58" fill="#9aa1ae" font-size="14" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">w<tspan font-size="70%" dy="4">1</tspan></text><text x="95" y="135" fill="#9aa1ae" font-size="14" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">w<tspan font-size="70%" dy="4">2</tspan></text><circle cx="45" cy="55" r="16" fill="#272b34" stroke="#5ab0ff" stroke-width="2"/><text x="45" y="60.6" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">x<tspan font-size="70%" dy="4">1</tspan></text><circle cx="45" cy="125" r="16" fill="#272b34" stroke="#5ab0ff" stroke-width="2"/><text x="45" y="130.6" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">x<tspan font-size="70%" dy="4">2</tspan></text><circle cx="176" cy="90" r="26" fill="#272b34" stroke="#b28dff" stroke-width="2"/><text x="176" y="94.5" fill="#e7e9ee" font-size="13" text-anchor="middle" style="font-family:Inter,Arial,sans-serif">ReLU</text><text x="176" y="140" fill="#9aa1ae" font-size="14" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">+ b</text><line x1="202" y1="90" x2="250" y2="90" stroke="#f2b134" stroke-width="2" marker-end="url(#arr)"/><text x="268" y="96" fill="#e7e9ee" font-size="18" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">h</text></svg>
+      $$\begin{gathered}h = \mathrm{ReLU}(\mathbf{w}^\top \mathbf{x} + b)\\ f : \mathbb{R}^2 \to \mathbb{R}\end{gathered}$$</div>
+    <div class="box"><h3>layer</h3><span class="dim">$m$ neurons side by side</span>
+      <svg viewBox="0 0 300 180" style="width:100%; max-height:250px; display:block; margin:0.5em auto 0.3em"><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f2b134"/></marker></defs><line x1="61" y1="55" x2="154" y2="35" stroke="#5f6673" stroke-width="1.5"/><line x1="61" y1="55" x2="154" y2="90" stroke="#5f6673" stroke-width="1.5"/><line x1="61" y1="55" x2="154" y2="145" stroke="#5f6673" stroke-width="1.5"/><line x1="61" y1="125" x2="154" y2="35" stroke="#5f6673" stroke-width="1.5"/><line x1="61" y1="125" x2="154" y2="90" stroke="#5f6673" stroke-width="1.5"/><line x1="61" y1="125" x2="154" y2="145" stroke="#5f6673" stroke-width="1.5"/><text x="110" y="20" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">W</text><circle cx="45" cy="55" r="16" fill="#272b34" stroke="#5ab0ff" stroke-width="2"/><text x="45" y="60.6" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">x<tspan font-size="70%" dy="4">1</tspan></text><circle cx="45" cy="125" r="16" fill="#272b34" stroke="#5ab0ff" stroke-width="2"/><text x="45" y="130.6" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">x<tspan font-size="70%" dy="4">2</tspan></text><circle cx="170" cy="35" r="16" fill="#272b34" stroke="#b28dff" stroke-width="2"/><circle cx="170" cy="90" r="16" fill="#272b34" stroke="#b28dff" stroke-width="2"/><circle cx="170" cy="145" r="16" fill="#272b34" stroke="#b28dff" stroke-width="2"/><line x1="186" y1="35" x2="222" y2="35" stroke="#f2b134" stroke-width="2" marker-end="url(#arr)"/><text x="240" y="40" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">h<tspan font-size="70%" dy="4">1</tspan></text><line x1="186" y1="90" x2="222" y2="90" stroke="#f2b134" stroke-width="2" marker-end="url(#arr)"/><text x="240" y="95" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">h<tspan font-size="70%" dy="4">2</tspan></text><line x1="186" y1="145" x2="222" y2="145" stroke="#f2b134" stroke-width="2" marker-end="url(#arr)"/><text x="240" y="150" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">h<tspan font-size="70%" dy="4">3</tspan></text><text x="275" y="95" fill="#9aa1ae" font-size="12" text-anchor="middle" style="font-family:Inter,Arial,sans-serif">m = 3</text></svg>
+      $$\begin{gathered}\mathbf{h} = \mathrm{ReLU}(W \mathbf{x} + \mathbf{b})\\ f : \mathbb{R}^2 \to \mathbb{R}^m\end{gathered}$$
+      <div style="margin-top:0.3em">$W \in \mathbb{R}^{m \times 2}$ has rows $\mathbf{w}_1^\top, \dots, \mathbf{w}_m^\top$</div></div>
+    <div class="box"><h3>network</h3><span class="dim">layers composed</span>
+      <svg viewBox="0 0 300 180" style="width:100%; max-height:250px; display:block; margin:0.5em auto 0.3em"><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f2b134"/></marker></defs><line x1="42" y1="60" x2="98" y2="35" stroke="#5f6673" stroke-width="1.2"/><line x1="42" y1="60" x2="98" y2="90" stroke="#5f6673" stroke-width="1.2"/><line x1="42" y1="60" x2="98" y2="145" stroke="#5f6673" stroke-width="1.2"/><line x1="42" y1="120" x2="98" y2="35" stroke="#5f6673" stroke-width="1.2"/><line x1="42" y1="120" x2="98" y2="90" stroke="#5f6673" stroke-width="1.2"/><line x1="42" y1="120" x2="98" y2="145" stroke="#5f6673" stroke-width="1.2"/><line x1="122" y1="35" x2="178" y2="35" stroke="#5f6673" stroke-width="1.2"/><line x1="122" y1="35" x2="178" y2="90" stroke="#5f6673" stroke-width="1.2"/><line x1="122" y1="35" x2="178" y2="145" stroke="#5f6673" stroke-width="1.2"/><line x1="122" y1="90" x2="178" y2="35" stroke="#5f6673" stroke-width="1.2"/><line x1="122" y1="90" x2="178" y2="90" stroke="#5f6673" stroke-width="1.2"/><line x1="122" y1="90" x2="178" y2="145" stroke="#5f6673" stroke-width="1.2"/><line x1="122" y1="145" x2="178" y2="35" stroke="#5f6673" stroke-width="1.2"/><line x1="122" y1="145" x2="178" y2="90" stroke="#5f6673" stroke-width="1.2"/><line x1="122" y1="145" x2="178" y2="145" stroke="#5f6673" stroke-width="1.2"/><line x1="202" y1="35" x2="253" y2="90" stroke="#5f6673" stroke-width="1.2"/><line x1="202" y1="90" x2="253" y2="90" stroke="#5f6673" stroke-width="1.2"/><line x1="202" y1="145" x2="253" y2="90" stroke="#5f6673" stroke-width="1.2"/><text x="70" y="16" fill="#e7e9ee" font-size="15" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">W<tspan font-size="70%" dy="4">1</tspan></text><text x="150" y="16" fill="#e7e9ee" font-size="15" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">W<tspan font-size="70%" dy="4">2</tspan></text><text x="228" y="16" fill="#e7e9ee" font-size="15" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">W<tspan font-size="70%" dy="4">3</tspan></text><circle cx="30" cy="60" r="12" fill="#272b34" stroke="#5ab0ff" stroke-width="2"/><circle cx="30" cy="120" r="12" fill="#272b34" stroke="#5ab0ff" stroke-width="2"/><circle cx="110" cy="35" r="12" fill="#272b34" stroke="#b28dff" stroke-width="2"/><circle cx="110" cy="90" r="12" fill="#272b34" stroke="#b28dff" stroke-width="2"/><circle cx="110" cy="145" r="12" fill="#272b34" stroke="#b28dff" stroke-width="2"/><circle cx="190" cy="35" r="12" fill="#272b34" stroke="#b28dff" stroke-width="2"/><circle cx="190" cy="90" r="12" fill="#272b34" stroke="#b28dff" stroke-width="2"/><circle cx="190" cy="145" r="12" fill="#272b34" stroke="#b28dff" stroke-width="2"/><circle cx="265" cy="90" r="12" fill="#272b34" stroke="#f2b134" stroke-width="2"/><text x="30" y="176" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Main,'Times New Roman',serif; font-weight:bold">x</text><text x="110" y="176" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Main,'Times New Roman',serif; font-weight:bold">h<tspan font-size="70%" dy="4">1</tspan></text><text x="190" y="176" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Main,'Times New Roman',serif; font-weight:bold">h<tspan font-size="70%" dy="4">2</tspan></text><text x="265" y="176" fill="#e7e9ee" font-size="16" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">f</text></svg>
+      $$\begin{aligned}\mathbf{h}_1 &= \mathrm{ReLU}(W_1 \mathbf{x} + \mathbf{b}_1)\\ \mathbf{h}_2 &= \mathrm{ReLU}(W_2 \mathbf{h}_1 + \mathbf{b}_2)\\ f_\theta(\mathbf{x}) &= W_3 \mathbf{h}_2 + \mathbf{b}_3\end{aligned}$$</div>
+  </div>
+</section>
+
+<section>
   <h2>One neuron, one layer</h2>
-  <div class="cols c-3" style="font-size:0.66em; gap:0.6em; margin-bottom:0.4em">
-    <div class="box"><b>neuron</b>: weighted sum + nonlinearity<br>$h = \mathrm{relu}(w^\top x + b)$</div>
-    <div class="box"><b>layer</b>: many neurons side by side<br>$h = \mathrm{relu}(W x + b)$</div>
-    <div class="box"><b>network</b>: layers composed<br>$f_\theta(x) = W_3\,\mathrm{relu}(W_2\,\mathrm{relu}(W_1 x + b_1) + b_2) + b_3$</div>
+  <div class="cols" style="font-size:0.7em; gap:0.6em; margin-bottom:0.4em">
+    <div class="box"><b>neuron</b>: $h = \mathrm{ReLU}(\mathbf{w}^\top \mathbf{x} + b)$</div>
+    <div class="box"><b>layer</b>, outputs summed: $\sum_k v_k\, \mathrm{ReLU}(\mathbf{w}_k^\top \mathbf{x} + b_k)$</div>
   </div>
   <div data-widget="neuron2d" data-config='{"mode":"neuron","width":560,"height":360}'></div>
-  <p class="small" style="font-size:0.66em; margin:0.15em 0 0">The neuron (or layer) is a function $f : \mathbb{R}^2 \to \mathbb{R}$. <b class="blue">Input</b>: a point $x = (x_1, x_2)$ on the floor plane. <b class="accent">Output</b>: one number, drawn as the height of the surface above that point.</p>
-  <div class="question fragment" style="font-size:0.72em; margin-top:0.3em">Why do we need the nonlinearity at all? <span class="fragment">→ turn the ReLU off: any number of units collapses to <b>one plane</b>.</span></div>
+  <p class="small" style="font-size:0.66em; margin:0.15em 0 0">Here the neuron is a function $f : \mathbb{R}^2 \to \mathbb{R}$, and so is the layer once its $m$ outputs are summed with weights. <b class="blue">Input</b>: a point $\mathbf{x} = (x_1, x_2)$ on the floor plane. <b class="accent">Output</b>: one number, drawn as the height of the surface above that point.</p>
+  <div class="question" style="font-size:0.72em; margin-top:0.3em">Why do we need the nonlinearity at all? <span>→ turn the ReLU off: any number of units collapses to <b>one plane</b>.</span></div>
 </section>
 
 <section>
   <h2>One hidden layer = a piecewise-linear function</h2>
   <div data-widget="relu1d" data-config='{"units":6,"target":"wave","width":620,"height":310}'></div>
-  <div class="cols" style="font-size:0.66em; gap:1em; margin-top:0.3em">
+  <div class="cols c-3" style="font-size:0.62em; gap:1em; margin-top:0.3em; grid-template-columns:1.05fr 1fr 1fr">
     <div>
-      <p style="margin:0">$$f(x) = c + \sum_{k=1}^{n} a_k\, \mathrm{relu}(w_k x + b_k)$$</p>
-      <p style="margin:0">Unit $k$ is <b>off</b> ($=0$) on one side of its joint $x = -b_k / w_k$ and <b>linear</b> on the other.</p>
+      <svg viewBox="0 0 370 200" style="width:100%; max-height:185px; display:block; margin:0 auto"><line x1="58" y1="90" x2="172" y2="22" stroke="#5f6673" stroke-width="1.5"/><line x1="208" y1="22" x2="310" y2="90" stroke="#5f6673" stroke-width="1.5"/><line x1="58" y1="90" x2="172" y2="68" stroke="#5f6673" stroke-width="1.5"/><line x1="208" y1="68" x2="310" y2="90" stroke="#5f6673" stroke-width="1.5"/><line x1="58" y1="90" x2="172" y2="158" stroke="#5f6673" stroke-width="1.5"/><line x1="208" y1="158" x2="310" y2="90" stroke="#5f6673" stroke-width="1.5"/><text x="112" y="32" fill="#e7e9ee" font-size="15" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">w<tspan font-size="70%" dy="4">k</tspan>, b<tspan font-size="70%" dy="4">k</tspan></text><text x="268" y="32" fill="#e7e9ee" font-size="15" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">a<tspan font-size="70%" dy="4">k</tspan></text><circle cx="40" cy="90" r="18" fill="#272b34" stroke="#5ab0ff" stroke-width="2"/><text x="40" y="96" fill="#e7e9ee" font-size="18" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">x</text><text x="40" y="128" fill="#5ab0ff" font-size="12" text-anchor="middle" style="font-family:Inter,Arial,sans-serif">input</text><circle cx="190" cy="22" r="18" fill="#272b34" stroke="#b28dff" stroke-width="2"/><path d="M180,27 L190,27 L199,15" fill="none" stroke="#b28dff" stroke-width="2"/><text x="216" y="27" fill="#9aa1ae" font-size="13" text-anchor="start" style="font-family:KaTeX_Main,'Times New Roman',serif">1</text><circle cx="190" cy="68" r="18" fill="#272b34" stroke="#b28dff" stroke-width="2"/><path d="M180,73 L190,73 L199,61" fill="none" stroke="#b28dff" stroke-width="2"/><text x="216" y="73" fill="#9aa1ae" font-size="13" text-anchor="start" style="font-family:KaTeX_Main,'Times New Roman',serif">2</text><circle cx="190" cy="158" r="18" fill="#272b34" stroke="#b28dff" stroke-width="2"/><path d="M180,163 L190,163 L199,151" fill="none" stroke="#b28dff" stroke-width="2"/><text x="216" y="163" fill="#9aa1ae" font-size="13" text-anchor="start" style="font-family:KaTeX_Main,'Times New Roman',serif">n</text><text x="190" y="120" fill="#9aa1ae" font-size="20" text-anchor="middle" style="font-family:KaTeX_Main,'Times New Roman',serif">⋮</text><circle cx="330" cy="90" r="20" fill="#272b34" stroke="#f2b134" stroke-width="2"/><text x="330" y="97" fill="#e7e9ee" font-size="18" text-anchor="middle" style="font-family:KaTeX_Main,'Times New Roman',serif">Σ</text><text x="330" y="128" fill="#9aa1ae" font-size="15" text-anchor="middle" style="font-family:KaTeX_Math,'Times New Roman',serif; font-style:italic">+ c</text><text x="330" y="150" fill="#f2b134" font-size="12" text-anchor="middle" style="font-family:Inter,Arial,sans-serif">output f(x)</text><text x="190" y="190" fill="#b28dff" font-size="12" text-anchor="middle" style="font-family:Inter,Arial,sans-serif">n hidden ReLU units</text></svg>
+    </div>
+    <div>
+      <p style="margin:0">$$f(x) = c + \sum_{k=1}^{n} a_k\, \mathrm{ReLU}(w_k x + b_k)$$</p>
+      <p style="margin:0">Unit $k$ is <b>off</b> ($=0$) on one side of its joint <span style="white-space:nowrap">$x = -b_k / w_k$</span> and <b>linear</b> on the other.</p>
     </div>
     <div>
       <p style="margin:0.2em 0">Between two neighbouring joints every unit is either off or linear, so $f$ is a sum of linear functions — <b>linear</b>.</p>
@@ -895,12 +950,18 @@
   <p style="margin-top:0.8em">Reassuring, but it says much less than it seems:</p>
   <table>
     <tr><th>question</th><th>does the theorem answer it?</th></tr>
-    <tr class="fragment"><td>can some $\theta$ <b>represent</b> the function?</td><td class="green">yes</td></tr>
-    <tr class="fragment"><td>how many units are needed?</td><td class="red">no — possibly astronomically many (depth helps: previous slide)</td></tr>
-    <tr class="fragment"><td>can we <b>find</b> that $\theta$ from data?</td><td class="red">no</td></tr>
-    <tr class="fragment"><td>will it <b>generalize</b> to new inputs?</td><td class="red">no</td></tr>
+    <tr><td>can some $\theta$ <b>represent</b> the function?</td><td class="green">yes</td></tr>
+    <tr><td>how many units are needed?</td><td class="red">no — possibly astronomically many (depth helps: previous slide)</td></tr>
+    <tr><td>can we <b>find</b> that $\theta$ from data?</td><td class="red">no</td></tr>
+    <tr><td>will it <b>generalize</b> to new inputs?</td><td class="red">no</td></tr>
   </table>
-  <p class="small fragment">Polynomials and lookup tables are universal approximators too. Expressiveness is not the explanation.</p>
+  <p class="small">Polynomials and lookup tables are universal approximators too. Expressiveness is not the explanation.</p>
+</section>
+
+<section>
+  <h2>How many knobs?</h2>
+  <div data-widget="paramscale" data-config='{"width":1040}'></div>
+  <p class="small" style="margin-top:0.2em">Each parameter is one real number the training procedure has to set. The largest models are <b>mixtures of experts</b>: only a fraction of the parameters is used for each token. Frontier closed models (GPT, Claude, Gemini) do not publish their sizes.</p>
 </section>
 
 <!-- ============================================================ -->
@@ -913,11 +974,11 @@
   <h2>Learning = minimizing a loss</h2>
   <div class="cols">
     <div>
-      <p>Training set $\{(x_i, y_i)\}_{i=1}^n$, a loss per example $\ell$:</p>
-      <p>$$L(\theta) = \frac{1}{n} \sum_{i=1}^n \ell\big(f_\theta(x_i),\, y_i\big)$$</p>
+      <p>Training set $\{(\mathbf{x}_i, y_i)\}_{i=1}^n$, a loss per example $\ell$:</p>
+      <p>$$L(\theta) = \frac{1}{n} \sum_{i=1}^n \ell\big(f_\theta(\mathbf{x}_i),\, y_i\big)$$</p>
       <ul class="small" style="font-size:0.78em">
         <li>regression: $\ell = (\hat y - y)^2$</li>
-        <li>classification: $\ell = -\log p_\theta(y \mid x)$ (cross-entropy)</li>
+        <li>classification: $\ell = -\log p_\theta(y \mid \mathbf{x})$ (cross-entropy)</li>
       </ul>
     </div>
     <div class="box">
@@ -955,8 +1016,8 @@ repeat:
     </div>
     <div>
       <p>From the spiral above to trillion-parameter language models: <b>the same loop</b>.</p>
-      <p class="fragment">Everything hinges on one line: <b>computing the gradient</b> of the loss with respect to every parameter.</p>
-      <p class="fragment small">Let us do it once by hand.</p>
+      <p>Everything hinges on one line: <b>computing the gradient</b> of the loss with respect to every parameter.</p>
+      <p class="small">Let us do it once by hand.</p>
     </div>
   </div>
 </section>
@@ -987,7 +1048,7 @@ repeat:
           <li>$-\nabla_\theta L$ is the direction of steepest descent → the gradient step $\theta \leftarrow \theta - \eta \nabla_\theta L$</li>
         </ul>
       </div>
-      <div class="box fragment" style="margin-top:0.6em">
+      <div class="box" style="margin-top:0.6em">
         <h3>Why not just nudge?</h3>
         <p class="small" style="font-size:0.75em">Nudging = one extra forward pass <b>per parameter</b>: 669,706 forward passes for one gradient of a small MNIST classifier. The <b>chain rule</b> gets all of them from one forward and one backward pass.</p>
       </div>
@@ -1009,9 +1070,9 @@ repeat:
         <li>a small MNIST digit classifier: <b>669,706</b> parameters</li>
         <li>Kimi K3 (2026): <b>2,800,000,000,000</b></li>
       </ul>
-      <p class="fragment">But the computation was <b>mechanical</b>: local derivatives, multiplied along the paths from the loss back to each parameter, reusing shared intermediate results.</p>
+      <p>But the computation was <b>mechanical</b>: local derivatives, multiplied along the paths from the loss back to each parameter, reusing shared intermediate results.</p>
     </div>
-    <div class="fragment">
+    <div>
       <div class="takeaway">
         <b>Next lecture</b>: teach the computer to do exactly this — automatically, for any network.
         One backward pass costs about as much as one forward pass, however many parameters there are.
@@ -1031,9 +1092,9 @@ repeat:
   <div class="cols">
     <div>
       <p>A network with one hidden layer of $n$ units can <b>memorize any</b> $n$ labelled examples: give each training point its own unit.</p>
-      <p class="fragment">Classical statistics: a model that can fit <em>anything</em> learns <em>nothing</em>. More parameters than data → overfitting.</p>
+      <p>Classical statistics: a model that can fit <em>anything</em> learns <em>nothing</em>. More parameters than data → overfitting.</p>
     </div>
-    <div class="fragment">
+    <div>
       <div class="box">
         <h3>Our MNIST network</h3>
         <ul class="small" style="font-size:0.78em">
@@ -1049,18 +1110,18 @@ repeat:
 
 <section>
   <h2>Experiment: true labels vs random labels</h2>
-  <div data-widget="linechart" data-config='{"src":"../../assets/lecture01/data/random_labels.json","x":"epoch","xlabel":"epoch","ylabel":"accuracy","yfmt":"pct","ymin":0,"ymax":1,"width":1060,"height":330,"reveal":1,"panels":[{"title":"true labels","base":"true_labels"},{"title":"labels shuffled at random","base":"random_labels"}],"series":[{"key":"train_acc","label":"train","color":"#3987e5"},{"key":"test_acc","label":"test","color":"#c98500"}]}'></div>
-  <p class="small fragment" style="margin-top:0.2em">Same network, same optimizer, same images. With random labels it still reaches <b>100% training accuracy</b> — and, of course, chance-level test accuracy.</p>
+  <div data-widget="linechart" data-config='{"src":"../../assets/lecture01/data/random_labels.json","x":"epoch","xlabel":"epoch","ylabel":"accuracy","yfmt":"pct","ymin":0,"ymax":1,"width":1060,"height":330,"panels":[{"title":"true labels","base":"true_labels"},{"title":"labels shuffled at random","base":"random_labels"}],"series":[{"key":"train_acc","label":"train","color":"#3987e5"},{"key":"test_acc","label":"test","color":"#c98500"}]}'></div>
+  <p class="small" style="margin-top:0.2em">Same network, same optimizer, same images. With random labels it still reaches <b>100% training accuracy</b> — and, of course, chance-level test accuracy.</p>
 </section>
 
 <section>
   <h2>What does this tell us?</h2>
   <ul>
     <li>The network <b>can</b> memorize arbitrary labels — classical capacity arguments say it is "too big".</li>
-    <li class="fragment">Yet on real data, SGD finds a solution that <b>generalizes</b>: among the many functions that fit the training set, it picks a good one.</li>
-    <li class="fragment">So generalization depends on the <b>data</b>, the <b>architecture</b> and the <b>training procedure</b> — not just on the number of parameters.</li>
+    <li>Yet on real data, SGD finds a solution that <b>generalizes</b>: among the many functions that fit the training set, it picks a good one.</li>
+    <li>So generalization depends on the <b>data</b>, the <b>architecture</b> and the <b>training procedure</b> — not just on the number of parameters.</li>
   </ul>
-  <div class="takeaway fragment">Zhang et al. (2017), "Understanding deep learning requires rethinking generalization".</div>
+  <div class="takeaway">Zhang et al. (2017), "Understanding deep learning requires rethinking generalization".</div>
 </section>
 
 <section>
@@ -1104,11 +1165,11 @@ repeat:
     <div>
       <ul>
         <li>the loss landscape is <b>non-convex</b> — yet SGD finds near-zero training loss, almost from any initialization</li>
-        <li class="fragment">there are <b>many</b> zero-loss solutions, including ones that memorize noise — yet SGD lands on one that generalizes</li>
-        <li class="fragment">more parameters often <b>help</b> generalization, against the classical bias–variance intuition</li>
+        <li>there are <b>many</b> zero-loss solutions, including ones that memorize noise — yet SGD lands on one that generalizes</li>
+        <li>more parameters often <b>help</b> generalization, against the classical bias–variance intuition</li>
       </ul>
     </div>
-    <div class="fragment">
+    <div>
       <div class="box">
         <h3>What we understand (partly)</h3>
         <ul class="small" style="font-size:0.72em">
@@ -1146,9 +1207,16 @@ repeat:
   </ul>
 </section>
 
-<section class="title-slide">
+<section id="feedback" class="title-slide">
   <h1>Feedback</h1>
-  <p class="subtitle">Link / QR code for this lecture's feedback form</p>
+  <div style="display:flex; align-items:center; gap:1.5em; margin-top:0.5em">
+    <img src="../../assets/feedback-qr.svg" alt="QR code linking to tinyurl.com/mimuw-dnn-feedback" style="width:340px; height:340px; box-sizing:content-box; padding:18px; background:#fff; border-radius:8px; margin:0">
+    <div>
+      <p>Please spend a minute: your feedback helps me improve the next lecture.</p>
+      <p style="font-family:var(--mono); font-size:1.1em"><a href="https://tinyurl.com/mimuw-dnn-feedback">tinyurl.com/mimuw-dnn-feedback</a></p>
+      <p class="small">Anonymous, no login, three questions.</p>
+    </div>
+  </div>
 </section>
 
 </div></div>

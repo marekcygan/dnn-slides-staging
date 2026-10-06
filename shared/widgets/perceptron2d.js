@@ -2,6 +2,7 @@
 //   mode "single": sliders for w1, w2, b; targets AND / OR / XOR; the line w·x + b = 0 and per-point check.
 //   mode "two-layer": h1 = [x1 − x2 ≥ 1], h2 = [x2 − x1 ≥ 1], y = [h1 + h2 ≥ 1] solves XOR.
 // config: { mode: "single" | "two-layer", target: "AND", width, height }
+import { LIGHT } from '../theme.js';
 import { C, h, fmt } from './util.js';
 
 const PTS = [[0, 0], [1, 0], [0, 1], [1, 1]];
@@ -35,7 +36,8 @@ export function mount(el, cfg) {
       const [x1, x2] = inv(px + 1, py + 1), o = out(x1, x2);
       for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) {
         const k = 4 * ((py + dy) * W + px + dx);
-        img.data[k] = o ? 70 : 30; img.data[k + 1] = o ? 58 : 36; img.data[k + 2] = o ? 30 : 48; img.data[k + 3] = 255;
+        const c = LIGHT ? (o ? [252, 232, 186] : [232, 238, 248]) : (o ? [70, 58, 30] : [30, 36, 48]);
+        img.data[k] = c[0]; img.data[k + 1] = c[1]; img.data[k + 2] = c[2]; img.data[k + 3] = 255;
       }
     }
     g.putImageData(img, 0, 0);

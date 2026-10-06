@@ -57,8 +57,8 @@ export function mount(el, cfg) {
       net.append(S('text', { x, y: y + 18, fill: C.fg, 'font-size': 19, 'font-weight': 600, 'text-anchor': 'middle' }, value));
     };
     node(P.x[0], HW.x, 'x₁', String(X[0]), C.dim); node(P.x[1], HW.x, 'x₂', String(X[1]), C.dim);
-    node(P.z[0], HW.z, 'h₁ = relu(z₁)', fmt(v.hh[0], 4), C.purple);
-    node(P.z[1], HW.z, 'h₂ = relu(z₂)', fmt(v.hh[1], 4), v.z[1] > 0 ? C.purple : '#5a606c');
+    node(P.z[0], HW.z, 'h₁ = ReLU(z₁)', fmt(v.hh[0], 4), C.purple);
+    node(P.z[1], HW.z, 'h₂ = ReLU(z₂)', fmt(v.hh[1], 4), v.z[1] > 0 ? C.purple : '#5a606c');
     node(P.y[0], HW.y, 'ŷ', fmt(v.yh, 4), C.blue);
     node(P.L[0], HW.L, `L (y=${Y})`, fmt(v.L, 4), C.accent);
     const b2t = S('text', { x: P.y[0][0], y: 145 - 36, fill: st.key === 'b2' ? amber : C.dim, 'font-size': 16, 'text-anchor': 'middle', style: 'cursor:pointer' }, `b₂=${val('b2', B2)}`);

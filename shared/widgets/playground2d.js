@@ -3,6 +3,7 @@
 // Backprop is written out by hand (it is lecture 2's job to automate it).
 // config: { dataset: "spiral" | "circles" | "xor" | "moons", layers: 2, width: 12, lr: 0.1, batch: 16,
 //           noise: 0.1, autoplay: false, width_px, height_px }
+import { LIGHT } from '../theme.js';
 import { C, h, fmt, isPrint } from './util.js';
 
 function rng(seed) { let s = seed >>> 0 || 1; return () => ((s = (s * 16807) % 2147483647) / 2147483647); }
@@ -118,7 +119,7 @@ export function mount(el, cfg) {
       const x = -1.1 + 2.2 * (j + 0.5) / RES, y = 1.1 - 2.2 * (i + 0.5) / RES;
       const p = sigmoid(forward([x, y]).logit), k = 4 * (i * RES + j);
       // blend between blue (class 0) and amber (class 1) through the surface colour
-      const c0 = [57, 135, 229], c1 = [201, 133, 0], bg = [30, 33, 40], t = Math.abs(p - 0.5) * 2 * 0.55;
+      const c0 = [57, 135, 229], c1 = [201, 133, 0], bg = LIGHT ? [255, 255, 255] : [30, 33, 40], t = Math.abs(p - 0.5) * 2 * 0.55;
       const c = p > 0.5 ? c1 : c0;
       heat.data[k] = bg[0] + (c[0] - bg[0]) * t; heat.data[k + 1] = bg[1] + (c[1] - bg[1]) * t; heat.data[k + 2] = bg[2] + (c[2] - bg[2]) * t; heat.data[k + 3] = 255;
     }

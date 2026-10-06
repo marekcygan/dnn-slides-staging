@@ -3,6 +3,7 @@
 //   mode "layer":  y = Σ_k v_k relu(w_k·x + b_k): a piecewise-linear surface; creases = the lines w_k·x + b_k = 0.
 //   toggle "ReLU off": the same layer without the nonlinearity collapses to a single plane.
 // config: { mode: "neuron" | "layer", units: 6, width, height }
+import { LIGHT } from '../theme.js';
 import { C, h, fmt } from './util.js';
 import { THREE, makeStage, line, label, arrow3 } from './three-util.js';
 
@@ -69,7 +70,7 @@ export function mount(el, cfg) {
     for (let i = 0; i < pos.count; i++) pos.setY(i, (f(pos.getX(i), -pos.getZ(i)) - z0) * k);
     zmin = (zmin - z0) * k; zmax = (zmax - z0) * k;
     // colour by height: blue (low) → surface grey → amber (high)
-    const lo = [0.22, 0.53, 0.9], mid = [0.2, 0.22, 0.27], hi = [0.79, 0.52, 0.0];
+    const lo = [0.22, 0.53, 0.9], mid = LIGHT ? [0.78, 0.8, 0.84] : [0.2, 0.22, 0.27], hi = [0.79, 0.52, 0.0];
     const zc = st.mode === 'neuron' ? 0 : (zmin + zmax) / 2, span = Math.max(1e-6, Math.max(Math.abs(zmin - zc), Math.abs(zmax - zc)));
     for (let i = 0; i < pos.count; i++) {
       const t = (pos.getY(i) - zc) / span, c = t >= 0 ? hi : lo, a = Math.min(1, Math.abs(t));
@@ -106,8 +107,8 @@ export function mount(el, cfg) {
 
     const n = st.mode === 'neuron' ? 3 : 4 * st.units + 0;
     readout.innerHTML = st.mode === 'neuron'
-      ? `<div><b>one neuron</b>: $h = \\mathrm{relu}(w^\\top x + b)$</div><div class="dim">${st.relu ? 'a hinge: zero on one side of the purple line, a tilted plane on the other' : 'without ReLU: just the plane'}</div><div>parameters: <b>3</b></div>`
-      : `<div><b>a layer of ${st.units}</b>: $\\sum_k v_k\\,${st.relu ? '\\mathrm{relu}' : ''}(w_k^\\top x + b_k)$</div><div class="dim">${st.relu ? 'a sum of hinges: flat facets meeting at the purple creases' : 'ReLU off: the sum of planes is <b>one plane</b>, however many units'}</div><div>parameters: <b>${n}</b></div>`;
+      ? `<div><b>one neuron</b>: $h = \\mathrm{ReLU}(\\mathbf{w}^\\top \\mathbf{x} + b)$</div><div class="dim">${st.relu ? 'a hinge: zero on one side of the purple line, a tilted plane on the other' : 'without ReLU: just the plane'}</div><div>parameters: <b>3</b></div>`
+      : `<div><b>a layer of ${st.units}</b>: $\\sum_k v_k\\,${st.relu ? '\\mathrm{ReLU}' : ''}(\\mathbf{w}_k^\\top \\mathbf{x} + b_k)$</div><div class="dim">${st.relu ? 'a sum of hinges: flat facets meeting at the purple creases' : 'ReLU off: the sum of planes is <b>one plane</b>, however many units'}</div><div>parameters: <b>${n}</b></div>`;
     window.renderMathInElement?.(readout, { delimiters: [{ left: '$', right: '$', display: false }], throwOnError: false });
   }
 

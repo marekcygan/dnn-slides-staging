@@ -22,15 +22,15 @@ export function compute(W1, B1, W2, B2) {
 }
 
 const STEPS = [
-  { t: 'The network and one training example', eq: String.raw`x = (1, 2),\; y = 1 \qquad z = W_1 x + b_1,\; h = \mathrm{relu}(z),\; \hat y = v^\top h + b_2,\; L = \tfrac12(\hat y - y)^2` },
+  { t: 'The network and one training example', eq: String.raw`\mathbf{x} = (1, 2),\; y = 1 \qquad \mathbf{z} = W_1 \mathbf{x} + \mathbf{b}_1,\; \mathbf{h} = \mathrm{ReLU}(\mathbf{z}),\; \hat y = \mathbf{v}^\top \mathbf{h} + b_2,\; L = \tfrac12(\hat y - y)^2` },
   { t: 'Forward: pre-activations', eq: String.raw`z_1 = 0.5\cdot1 + 0.25\cdot2 + 0 = 1,\qquad z_2 = -1\cdot1 + 0.25\cdot2 + 0.2 = -0.3` },
-  { t: 'Forward: ReLU', eq: String.raw`h_1 = \mathrm{relu}(1) = 1,\qquad h_2 = \mathrm{relu}(-0.3) = 0` },
+  { t: 'Forward: ReLU', eq: String.raw`h_1 = \mathrm{ReLU}(1) = 1,\qquad h_2 = \mathrm{ReLU}(-0.3) = 0` },
   { t: 'Forward: output and loss', eq: String.raw`\hat y = 1.5\cdot1 + 2\cdot0 + 0.5 = 2,\qquad L = \tfrac12(2-1)^2 = 0.5` },
   { t: 'Backward: start at the loss', eq: String.raw`\frac{\partial L}{\partial \hat y} = \hat y - y = 1` },
   { t: 'Backward: output layer', eq: String.raw`\frac{\partial L}{\partial v_i} = \frac{\partial L}{\partial \hat y}\, h_i = (1,\ 0),\qquad \frac{\partial L}{\partial b_2} = 1` },
   { t: 'Backward: into the hidden layer', eq: String.raw`\frac{\partial L}{\partial h_i} = \frac{\partial L}{\partial \hat y}\, v_i = (1.5,\ 2)` },
-  { t: 'Backward: through the ReLU', eq: String.raw`\frac{\partial L}{\partial z_i} = \frac{\partial L}{\partial h_i}\,\mathrm{relu}'(z_i) = (1.5\cdot1,\ 2\cdot0) = (1.5,\ 0)\quad\text{— unit 2 is off}` },
-  { t: 'Backward: first layer', eq: String.raw`\frac{\partial L}{\partial w_{ij}} = \frac{\partial L}{\partial z_i}\, x_j = \begin{bmatrix}1.5 & 3\\ 0 & 0\end{bmatrix},\qquad \frac{\partial L}{\partial b_1} = (1.5,\ 0)` },
+  { t: 'Backward: through the ReLU', eq: String.raw`\frac{\partial L}{\partial z_i} = \frac{\partial L}{\partial h_i}\,\mathrm{ReLU}'(z_i) = (1.5\cdot1,\ 2\cdot0) = (1.5,\ 0)\quad\text{— unit 2 is off}` },
+  { t: 'Backward: first layer', eq: String.raw`\frac{\partial L}{\partial w_{ij}} = \frac{\partial L}{\partial z_i}\, x_j = \begin{bmatrix}1.5 & 3\\ 0 & 0\end{bmatrix},\qquad \frac{\partial L}{\partial \mathbf{b}_1} = (1.5,\ 0)` },
   { t: 'One gradient step (η = 0.1)', eq: String.raw`\theta \leftarrow \theta - \eta\,\nabla_\theta L \quad\Rightarrow\quad L:\ 0.5 \;\to\; LNEW` },
 ];
 

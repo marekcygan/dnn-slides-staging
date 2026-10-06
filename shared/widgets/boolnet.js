@@ -37,8 +37,6 @@ export function mount(el, cfg) {
     PATTERNS.forEach((p, j) => p.forEach((pi, i) => {
       const w = pi ? 1 : -1;
       svg.append(S('line', { x1: IX + 22, y1: iy[i], x2: HX - 34, y2: hy[j], stroke: w > 0 ? '#5fd38d' : '#ff6b6b', 'stroke-width': x[i] ? 2.6 : 1.2, opacity: x[i] ? 1 : 0.45 }));
-      const t = i === j ? 0.5 : 0.28 + 0.1 * i, lx = IX + 22 + (HX - 56 - IX) * t, ly = iy[i] + (hy[j] - iy[i]) * t;
-      if (i === j) svg.append(S('text', { x: lx, y: ly - 6, fill: '#5fd38d', 'font-size': 14, 'text-anchor': 'middle' }, '+1'));
     }));
     hv.forEach((v, j) => svg.append(S('line', { x1: HX + 34, y1: hy[j], x2: OX - 26, y2: oy, stroke: '#9aa1ae', 'stroke-width': v ? 2.6 : 1.2, opacity: v ? 1 : 0.45 })));
     const node = (cx, cy, txt, sub, on, color, w = 44) => {
@@ -49,10 +47,13 @@ export function mount(el, cfg) {
     x.forEach((v, i) => node(IX, iy[i], String(v), `x${'₁₂₃'[i]}`, v, '#5ab0ff'));
     PATTERNS.forEach((p, j) => node(HX, hy[j], `h${'₁₂₃'[j]} = ${hv[j]}`, `fires only on ${p.join('')}  (≥ 1)`, hv[j], '#b28dff', 68));
     node(OX, oy, `y = ${y}`, 'OR  (h₁+h₂+h₃ ≥ 1)', y, '#f2b134', 70);
-    svg.append(S('text', { x: 150, y: H - 6, fill: C.dim, 'font-size': 13, 'text-anchor': 'middle' }, 'green: weight +1 · red: weight −1'));
   }
   el.classList.add('widget');
   el.append(h('div', { style: 'display:flex; gap:1.2em; align-items:flex-start' },
-    h('div', {}, table, h('div', { class: 'dim', style: 'margin-top:0.4em' }, 'click a row')), svg));
+    h('div', {}, table, h('div', { class: 'dim', style: 'margin-top:0.4em' }, 'click a row'),
+      h('div', { style: 'margin-top:0.8em; display:flex; flex-direction:column; gap:0.3em; font-size:1.05em' },
+        h('div', { style: 'display:flex; align-items:center; gap:0.5em' }, h('span', { style: 'display:inline-block; width:28px; height:0; border-top:3px solid #5fd38d' }), 'weight +1'),
+        h('div', { style: 'display:flex; align-items:center; gap:0.5em' }, h('span', { style: 'display:inline-block; width:28px; height:0; border-top:3px solid #ff6b6b' }), 'weight −1'),
+        h('div', { class: 'dim', style: 'font-size:0.9em' }, 'thick: input is 1'))), svg));
   draw();
 }

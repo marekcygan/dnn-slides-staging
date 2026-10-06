@@ -2,6 +2,7 @@
 // Left: contour plot of the training loss L(w, b) with the optimizer's path. GD follows −∇L exactly;
 // SGD uses the gradient of a random minibatch (an unbiased but noisy estimate).
 // config: { batch: 4, lr: 0.1, width, height }
+import { LIGHT } from '../theme.js';
 import { C, h, fmt, isPrint } from './util.js';
 
 function rng(seed) { let s = seed; return () => ((s = (s * 16807) % 2147483647) / 2147483647); }
@@ -30,8 +31,9 @@ export function mount(el, cfg) {
     for (let py = 0; py < H; py++) for (let px = 0; px < W; px++) {
       const w = range.w[0] + px / W * (range.w[1] - range.w[0]), b = range.b[1] - py / H * (range.b[1] - range.b[0]);
       const v = Math.log(loss([w, b]) - lmin + 1e-3), band = (v * 2.2) - Math.floor(v * 2.2), k = 4 * (py * W + px);
-      const shade = 30 + 18 * Math.max(0, 1 - (v + 3) / 7), line = band < 0.06 ? 28 : 0;
-      img.data[k] = shade + line; img.data[k + 1] = shade + 3 + line; img.data[k + 2] = shade + 10 + line; img.data[k + 3] = 255;
+      const f = Math.max(0, 1 - (v + 3) / 7), line = band < 0.06 ? 28 : 0;
+      const shade = LIGHT ? 250 - 22 * f - 1.4 * line : 30 + 18 * f + line;
+      img.data[k] = shade; img.data[k + 1] = shade + (LIGHT ? 1 : 3); img.data[k + 2] = shade + (LIGHT ? 4 : 10); img.data[k + 3] = 255;
     }
     bg.putImageData(img, 0, 0);
   })();
